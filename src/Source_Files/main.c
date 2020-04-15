@@ -52,57 +52,57 @@
 #define  LED_OUTPUT_TASK_STK_SIZE         512u
 #define  LCD_DISPLAY_TASK_PRIO             21u
 #define  LCD_DISPLAY_TASK_STK_SIZE        512u
-#define  IDLE_TASK_PRIO            		   62u
-#define  IDLE_TASK_STK_SIZE       		  512u
+#define  IDLE_TASK_PRIO                    62u
+#define  IDLE_TASK_STK_SIZE               512u
 
-#define  LED0_OFF						     0
-#define  LED0_ON							 1
-#define  LED1_OFF							 2
-#define  LED1_ON							 3
+#define  LED0_OFF                            0
+#define  LED0_ON                             1
+#define  LED1_OFF                            2
+#define  LED1_ON                             3
 
 // Globals
 
-static CPU_STK MainStartTaskStk[MAIN_START_TASK_STK_SIZE];     			 /* Start Task Stack.                                    */
-static OS_TCB MainStartTaskTCB;							       			 /* Start Task TCB.                                      */
+static CPU_STK MainStartTaskStk[MAIN_START_TASK_STK_SIZE];               /* Start Task Stack.                                    */
+static OS_TCB MainStartTaskTCB;                                          /* Start Task TCB.                                      */
 
 static CPU_STK SpeedSetpointTaskStk[SPEED_SETPOINT_TASK_STK_SIZE];       /* Speed Setpoint Stack.                                */
-static OS_TCB SpeedSetpointTaskTCB;							   			 /* Speed Setpoint TCB.                                  */
+static OS_TCB SpeedSetpointTaskTCB;                                      /* Speed Setpoint TCB.                                  */
 
 static CPU_STK VehicleDirectionTaskStk[VEHICLE_DIRECTION_TASK_STK_SIZE]; /* Vehicle Direction Stack.                             */
-static OS_TCB VehicleDirectionTaskTCB;							  		 /* Vehicle Direction TCB.                               */
+static OS_TCB VehicleDirectionTaskTCB;                                   /* Vehicle Direction TCB.                               */
 
 static CPU_STK VehicleMonitorTaskStk[VEHICLE_MONITOR_TASK_STK_SIZE];     /* Vehicle Monitor Stack.                               */
-static OS_TCB VehicleMonitorTaskTCB;							   	     /* Vehicle Monitor TCB.                                 */
+static OS_TCB VehicleMonitorTaskTCB;                                     /* Vehicle Monitor TCB.                                 */
 
-static CPU_STK LEDOutputTaskStk[LED_OUTPUT_TASK_STK_SIZE]; 				 /* LED Output Task Stack.                               */
-static OS_TCB LEDOutputTaskTCB;									  	     /* LED Output Task TCB.                                 */
+static CPU_STK LEDOutputTaskStk[LED_OUTPUT_TASK_STK_SIZE];               /* LED Output Task Stack.                               */
+static OS_TCB LEDOutputTaskTCB;                                          /* LED Output Task TCB.                                 */
 
-static CPU_STK LCDDisplayTaskStk[LCD_DISPLAY_TASK_STK_SIZE]; 		     /* LCD Display Task Stack.                              */
-static OS_TCB LCDDisplayTaskTCB;									     /* LCD Display Task TCB.                                */
+static CPU_STK LCDDisplayTaskStk[LCD_DISPLAY_TASK_STK_SIZE];             /* LCD Display Task Stack.                              */
+static OS_TCB LCDDisplayTaskTCB;                                         /* LCD Display Task TCB.                                */
 
-static CPU_STK IdleTaskStk[IDLE_TASK_STK_SIZE];				 			 /* Idle Task Stack.                                     */
-static OS_TCB IdleTaskTCB;									  			 /* Idle Task TCB.                                       */
+static CPU_STK IdleTaskStk[IDLE_TASK_STK_SIZE];                          /* Idle Task Stack.                                     */
+static OS_TCB IdleTaskTCB;                                               /* Idle Task TCB.                                       */
 
-static OS_MUTEX Vehicle_Speed_Mutex;									 /* Vehicle Speed Mutex.                                 */
-static OS_MUTEX Vehicle_Direction_Mutex;								 /* Vehicle Direction Mutex.                             */
-OS_MUTEX queue_mutex;													 /* Queue Mutex.                                         */
-OS_SEM btn_sem;														     /* Button Semaphore.                                    */
+static OS_MUTEX Vehicle_Speed_Mutex;                                     /* Vehicle Speed Mutex.                                 */
+static OS_MUTEX Vehicle_Direction_Mutex;                                 /* Vehicle Direction Mutex.                             */
+OS_MUTEX queue_mutex;                                                    /* Queue Mutex.                                         */
+OS_SEM btn_sem;                                                          /* Button Semaphore.                                    */
 
-OS_FLAG_GRP Vehicle_Monitor_Flag_Group;							    	 /* Vehicle Monitor Flag Group.                          */
-const OS_FLAGS speed_update_flag 	 = 0x1;								 /* Speed Update Flag.                                   */			
-const OS_FLAGS direction_update_flag = 0x2; 							 /* Direction Update Flag.                               */	
-OS_FLAG_GRP LED_Output_Flag_Group;										 /* LED Output Flag Group.                               */
-const OS_FLAGS alert_event_flag 	 = 0x3;								 /* Alert Event Flag.                                    */
+OS_FLAG_GRP Vehicle_Monitor_Flag_Group;                                  /* Vehicle Monitor Flag Group.                          */
+const OS_FLAGS speed_update_flag     = 0x1;                              /* Speed Update Flag.                                   */            
+const OS_FLAGS direction_update_flag = 0x2;                              /* Direction Update Flag.                               */    
+OS_FLAG_GRP LED_Output_Flag_Group;                                       /* LED Output Flag Group.                               */
+const OS_FLAGS alert_event_flag      = 0x3;                              /* Alert Event Flag.                                    */
 
-volatile int cur_led0_state			 = LED0_OFF;						 /* Current LED0 State.                                  */
-volatile int cur_led1_state			 = LED1_OFF;						 /* Current LED1 State.                                  */
-extern volatile int cap_touch_state;									 /* Capacitive Touch State.                              */
+volatile int cur_led0_state          = LED0_OFF;                         /* Current LED0 State.                                  */
+volatile int cur_led1_state          = LED1_OFF;                         /* Current LED1 State.                                  */
+extern volatile int cap_touch_state;                                     /* Capacitive Touch State.                              */
 
-struct VehicleSpeedData_t vehicle_speed;								 /* Vehicle Speed.                                       */
-struct VehicleDirectionData_t vehicle_dir;								 /* Vehicle Direction.                                   */
-struct InputFifo_t *fifo_queue;											 /* Fifo Queue.                                          */
+struct VehicleSpeedData_t vehicle_speed;                                 /* Vehicle Speed.                                       */
+struct VehicleDirectionData_t vehicle_dir;                               /* Vehicle Direction.                                   */
+struct InputFifo_t *fifo_queue;                                          /* Fifo Queue.                                          */
 
-static DISPLAY_Device_t display_device;								     /* Display Device.                                      */
+static DISPLAY_Device_t display_device;                                  /* Display Device.                                      */
 
 // Function Prototypes
 static void MainStartTask(void *p_arg);
@@ -141,7 +141,7 @@ int main(void)
     APP_RTOS_ASSERT_DBG((RTOS_ERR_CODE_GET(err) == RTOS_ERR_NONE), 1);
 
 
-    OSTaskCreate(&MainStartTaskTCB,                        		/* Create the Start Task.                               */
+    OSTaskCreate(&MainStartTaskTCB,                              /* Create the Start Task.                               */
                  "Main Start Task",
                   MainStartTask,
                   DEF_NULL,
@@ -214,43 +214,43 @@ static void MainStartTask(void *p_arg)
 
     CPU_TS_TmrInit();
 
-    gpio_open();												/* Initialize GPIO 									    */
-    CAPSENSE_Init();											/* Initialize Capsense								    */
+    gpio_open();                                                /* Initialize GPIO                                      */
+    CAPSENSE_Init();                                            /* Initialize Capsense                                  */
 
-    gpio_interrupt_init(); 										/* Init GPIO Interrupts 								*/
-    fifo_queue = fifo_init(); 									/* Init Fifo Queue  									*/
+    gpio_interrupt_init();                                      /* Init GPIO Interrupts                                 */
+    fifo_queue = fifo_init();                                   /* Init Fifo Queue                                      */
 
-    vehicle_speed = vehicle_speed_data_init(vehicle_speed);		/* Init Vehicle Speed Data 								*/
-    vehicle_dir = vehicle_direction_data_init(vehicle_dir);		/* Init Vehicle Direction Data							*/
+    vehicle_speed = vehicle_speed_data_init(vehicle_speed);     /* Init Vehicle Speed Data                              */
+    vehicle_dir = vehicle_direction_data_init(vehicle_dir);     /* Init Vehicle Direction Data                          */
 
-    OSSemCreate(&btn_sem,										/* Init Button Semaphore  							    */
+    OSSemCreate(&btn_sem,                                       /* Init Button Semaphore                                */
                 "Button Semaphore",
                 0,
                 &err);
 
-    OSMutexCreate(&queue_mutex,									/* Init Queue Mutex							            */
+    OSMutexCreate(&queue_mutex,                                 /* Init Queue Mutex                                     */
                   "Queue Mutex",
                   &err);
 
-    OSMutexCreate(&Vehicle_Speed_Mutex,							/* Init Vehicle Speed Mutex					            */
+    OSMutexCreate(&Vehicle_Speed_Mutex,                         /* Init Vehicle Speed Mutex                             */
                   "Vehicle Speed Mutex",
                   &err);
 
-    OSMutexCreate(&Vehicle_Direction_Mutex,						/* Init Vehicle Direction Mutex				            */
+    OSMutexCreate(&Vehicle_Direction_Mutex,                     /* Init Vehicle Direction Mutex                         */
                   "Vehicle Direction Mutex",
                   &err);
 
-    OSFlagCreate(&Vehicle_Monitor_Flag_Group,					/* Init Vehicle Monitor Flag Group  		            */
+    OSFlagCreate(&Vehicle_Monitor_Flag_Group,                   /* Init Vehicle Monitor Flag Group                      */
                  "Vehicle Monitor Flag Group",
                  speed_update_flag,
                  &err);
 
-    OSFlagCreate(&Vehicle_Monitor_Flag_Group,					/* Init Vehicle Monitor Flag Group  		            */
+    OSFlagCreate(&Vehicle_Monitor_Flag_Group,                   /* Init Vehicle Monitor Flag Group                      */
                  "Vehicle Monitor Flag Group",
                  direction_update_flag,
                  &err);
 
-    OSFlagCreate(&LED_Output_Flag_Group,						/* Init LED Output Flag Group  		                    */
+    OSFlagCreate(&LED_Output_Flag_Group,                        /* Init LED Output Flag Group                           */
                  "LED Output Flag Group",
                  alert_event_flag,
                  &err);
@@ -297,7 +297,7 @@ static void MainStartTask(void *p_arg)
                  (OS_OPT_TASK_STK_CLR),
                  &err);
 
-    OSTaskCreate(&LEDOutputTaskTCB,                		       	/* Create the LED Output Task.                          */
+    OSTaskCreate(&LEDOutputTaskTCB,                             /* Create the LED Output Task.                          */
                  "LED Output Task",
                  LEDOutputTask,
                  DEF_NULL,
@@ -311,7 +311,7 @@ static void MainStartTask(void *p_arg)
                  (OS_OPT_TASK_STK_CLR),
                  &err);
 
-    OSTaskCreate(&LCDDisplayTaskTCB,                		    /* Create the LCD Display Task.                         */
+    OSTaskCreate(&LCDDisplayTaskTCB,                            /* Create the LCD Display Task.                         */
                  "LCD Display Task",
                  LCDDisplayTask,
                  DEF_NULL,
@@ -325,7 +325,7 @@ static void MainStartTask(void *p_arg)
                  (OS_OPT_TASK_STK_CLR),
                  &err);
 
-    OSTaskCreate(&IdleTaskTCB,                		            /* Create the Idle Task.                                */
+    OSTaskCreate(&IdleTaskTCB,                                  /* Create the Idle Task.                                */
                      "Idle Task",
                       IdleTask,
                       DEF_NULL,
@@ -363,7 +363,7 @@ static void SpeedSetpointTask(void *p_arg)
 
     while (DEF_ON)
     {
-        OSSemPend(&btn_sem,										/* Pend button semaphore from button interrupts         */
+        OSSemPend(&btn_sem,                                     /* Pend button semaphore from button interrupts         */
                   0,
                   OS_OPT_PEND_BLOCKING,
                   DEF_NULL,
@@ -375,7 +375,7 @@ static void SpeedSetpointTask(void *p_arg)
                     DEF_NULL,
                     &err);
 
-        q_pop_val = InputFifo_Get(fifo_queue);					/* Pop queue and get value						        */
+        q_pop_val = InputFifo_Get(fifo_queue);                  /* Pop queue and get value                                */
 
         OSMutexPost(&queue_mutex,
                     OS_OPT_POST_NONE,
@@ -390,12 +390,12 @@ static void SpeedSetpointTask(void *p_arg)
                         DEF_NULL,
                         &err);
 
-            if(q_pop_val == BTN0_PUSHED)						/* Increment speed if button 0 is pushed		        */
+            if(q_pop_val == BTN0_PUSHED)                        /* Increment speed if button 0 is pushed                */
             {
                 vehicle_speed.cur_speed += 5;
                 (vehicle_speed.up_count)++;
             }
-            else if(q_pop_val == BTN1_PUSHED)					/* Decrement speed if button 1 is pushed		        */
+            else if(q_pop_val == BTN1_PUSHED)                   /* Decrement speed if button 1 is pushed                */
             {
                 if(vehicle_speed.cur_speed > 5)
                 {
@@ -414,7 +414,7 @@ static void SpeedSetpointTask(void *p_arg)
                         &err);
         }
 
-        OSFlagPost(&Vehicle_Monitor_Flag_Group,					/* Post Speed Update Flag						        */
+        OSFlagPost(&Vehicle_Monitor_Flag_Group,                /* Post Speed Update Flag                                */
                    speed_update_flag,
                    OS_OPT_POST_FLAG_SET,
                    &err);
@@ -450,7 +450,7 @@ static void VehicleDirectionTask(void *p_arg)
         CAPSENSE_Sense();
         cap_touch();
 
-        if(cap_touch_state > CAP_TOUCH_NO_DIR)					/* If capacitive touch sensor is touched                */
+        if(cap_touch_state > CAP_TOUCH_NO_DIR)                  /* If capacitive touch sensor is touched                */
         {
             OSMutexPend(&Vehicle_Direction_Mutex,
                         0,
@@ -506,7 +506,7 @@ static void VehicleDirectionTask(void *p_arg)
                         OS_OPT_POST_NONE,
                         &err);
 
-            OSFlagPost(&Vehicle_Monitor_Flag_Group,				/* Post Direction Update Flag					        */
+            OSFlagPost(&Vehicle_Monitor_Flag_Group,             /* Post Direction Update Flag                            */
                        direction_update_flag,
                        OS_OPT_POST_FLAG_SET,
                        &err);
@@ -519,13 +519,13 @@ static void VehicleDirectionTask(void *p_arg)
                         DEF_NULL,
                         &err);
 
-            vehicle_dir.cur_direction = VEHICLE_DIR_NONE;		/* Capacitive touch is not touched, no Vehicle Direction*/
+            vehicle_dir.cur_direction = VEHICLE_DIR_NONE;       /* Capacitive touch is not touched, no Vehicle Direction*/
 
             OSMutexPost(&Vehicle_Direction_Mutex,
                         OS_OPT_POST_NONE,
                         &err);
 
-            OSFlagPost(&Vehicle_Monitor_Flag_Group,				/* Post Direction Update Flag					        */
+            OSFlagPost(&Vehicle_Monitor_Flag_Group,             /* Post Direction Update Flag                            */
                        direction_update_flag,
                        OS_OPT_POST_FLAG_SET,
                        &err);
@@ -666,7 +666,7 @@ static void LEDOutputTask(void *p_arg)
                    OS_OPT_POST_FLAG_CLR,
                    &err);
 
-        update_LED();											/* Update LED state  		                            */
+        update_LED();                                           /* Update LED state                                      */
     }
 }
 
@@ -689,18 +689,18 @@ static void LCDDisplayTask(void *p_arg)
     RTOS_ERR err;
     PP_UNUSED_PARAM(p_arg);                                     /* Prevent compiler warning.                            */
     struct DisplayData_t display_data;
-    display_data = display_data_init(display_data);				/* Init Display Data									*/
+    display_data = display_data_init(display_data);             /* Init Display Data                                    */
     int cur_speed;
 
-    DISPLAY_Init();												/* Initialize the display module. 						*/
+    DISPLAY_Init();                                             /* Initialize the display module.                       */
 
-                                                                /* Retrieve the properties of the display. 				*/
+                                                                /* Retrieve the properties of the display.              */
     if (DISPLAY_DeviceGet(0, &display_device) != DISPLAY_EMSTATUS_OK)
     {
         while (1) ;
     }
 
-                                                                /* Retarget stdio to the display. 						*/
+                                                                /* Retarget stdio to the display.                       */
     if (TEXTDISPLAY_EMSTATUS_OK != RETARGET_TextDisplayInit())
     {
         while (1) ;
